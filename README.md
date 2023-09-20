@@ -8,7 +8,7 @@ mkdir build
 ./build.sh
 ```
 
-## Run
+## Usage
 
 ```
 Usage: cbrainfuck <filename>
