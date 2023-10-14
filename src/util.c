@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char* read_file(const char* file_path)
+File* file_read(const char* file_path)
 {
     FILE* file = fopen(file_path, "rb");
 
@@ -15,7 +15,7 @@ const char* read_file(const char* file_path)
     long file_size = ftell(file);
     rewind(file);
 
-    char* content = malloc(file_size + 1);
+    char* content = (char*)malloc(file_size + 1);
 
     if (content == NULL) {
         return NULL;
@@ -26,5 +26,20 @@ const char* read_file(const char* file_path)
 
     content[file_size] = 0;
 
-    return content;
+    File* result = (File*)malloc(sizeof(File));
+
+    result->data = content;
+    result->size = file_size;
+
+    if (result == NULL) {
+        return NULL;
+    }
+
+    return result;
+}
+
+void file_free(File* file)
+{
+    free((void*)file->data);
+    free((void*)file);
 }

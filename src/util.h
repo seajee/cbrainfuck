@@ -1,6 +1,15 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-const char* read_file(const char* file_path);
+#include <stddef.h>
+
+typedef struct
+{
+    const char* data;
+    size_t size;
+} File;
+
+File* file_read(const char* file_path);
+void file_free(File* file);
 
 #endif // _UTIL_H_

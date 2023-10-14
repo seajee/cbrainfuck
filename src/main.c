@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     const char* out_file_name = "bf.c";
     char* c_compile_cmd = "cc bf.c -o bf.o";
 
-    const char* program = read_file(file_name);
+    File* program = file_read(file_name);
 
     if (program == NULL)
     {
@@ -25,7 +25,6 @@ int main(int argc, char* argv[])
     }
 
     char instruction;
-    size_t program_size = strlen(program);
 
     FILE* out_file = fopen(out_file_name, "w");
 
@@ -37,9 +36,9 @@ int main(int argc, char* argv[])
 
     fputs("#include <stdio.h>\nint main()\n{\n    char memory[4096] = { 0 };\n    char* ptr = memory;\n", out_file);
 
-    for (size_t i = 0; i < program_size; ++i)
+    for (size_t i = 0; i < program->size; ++i)
     {
-        instruction = program[i];
+        instruction = program->data[i];
 
         switch (instruction)
         {
