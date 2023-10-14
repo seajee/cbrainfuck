@@ -7,9 +7,9 @@ typedef struct
 {
     const char* data;
     size_t size;
-} File;
+} FileReader;
 
-File* file_read(const char* file_path);
-void file_free(File* file);
+FileReader file_reader_read(const char* file_path);
+void file_reader_free(FileReader fr);
 
 #endif // _UTIL_H_

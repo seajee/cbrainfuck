@@ -16,9 +16,9 @@ int main(int argc, char* argv[])
     const char* out_file_name = "bf.c";
     char* c_compile_cmd = "cc bf.c -o bf.o";
 
-    File* program = file_read(file_name);
+    FileReader program = file_reader_read(file_name);
 
-    if (program == NULL)
+    if (program.data < 0)
     {
         fprintf(stderr, "ERROR: Could not read file\n");
         return 1;
@@ -36,9 +36,9 @@ int main(int argc, char* argv[])
 
     fputs("#include <stdio.h>\nint main()\n{\n    char memory[4096] = { 0 };\n    char* ptr = memory;\n", out_file);
 
-    for (size_t i = 0; i < program->size; ++i)
+    for (size_t i = 0; i < program.size; ++i)
     {
-        instruction = program->data[i];
+        instruction = program.data[i];
 
         switch (instruction)
         {

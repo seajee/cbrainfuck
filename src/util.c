@@ -3,43 +3,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-File* file_read(const char* file_path)
+FileReader file_reader_read(const char* file_path)
 {
+    FileReader fr = {
+        .data = (char*)(-1),
+        .size = -1
+    };
+
     FILE* file = fopen(file_path, "rb");
 
     if (file == NULL) {
-        return NULL;
+        return fr;
     }
 
+    // Get file size
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
     rewind(file);
 
+    // Allocate memory for file content
     char* content = (char*)malloc(file_size + 1);
 
     if (content == NULL) {
-        return NULL;
+        return fr;
     }
 
+    // Read file content and close it
     fread(content, file_size, 1, file);
     fclose(file);
 
     content[file_size] = 0;
 
-    File* result = (File*)malloc(sizeof(File));
+    fr.data = content;
+    fr.size = file_size;
 
-    result->data = content;
-    result->size = file_size;
-
-    if (result == NULL) {
-        return NULL;
-    }
-
-    return result;
+    return fr;
 }
 
-void file_free(File* file)
+void file_reader_free(FileReader fr)
 {
-    free((void*)file->data);
-    free((void*)file);
+    free((void*)fr.data);
 }
