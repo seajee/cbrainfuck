@@ -5,7 +5,7 @@ To build the project use the following commands
 
 ```bash
 mkdir build
-./build.sh
+make
 ```
 
 ## Usage
