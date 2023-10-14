@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "util.h"
+
 int main(int argc, char* argv[])
 {
     if (argc <= 1)
@@ -13,21 +15,14 @@ int main(int argc, char* argv[])
     const char* file_name = argv[1];
     const char* out_file_name = "bf.c";
     char* c_compile_cmd = "cc bf.c -o bf.o";
-    FILE* file = fopen(file_name, "rb");
 
-    if (file == NULL)
+    const char* program = read_file(file_name);
+
+    if (program == NULL)
     {
-        fprintf(stderr, "Error: Could not read file\n");
+        fprintf(stderr, "ERROR: Could not read file\n");
         return 1;
     }
-
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    char* program = malloc(file_size + 1);
-    fread(program, file_size, 1, file);
-    fclose(file);
-    program[file_size] = 0;
 
     char instruction;
     size_t program_size = strlen(program);
