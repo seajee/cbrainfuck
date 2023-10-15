@@ -1,4 +1,4 @@
-# CBrainfuck
+# cbrainfuck
 
 Yet another Brainfuck compiler.
 
