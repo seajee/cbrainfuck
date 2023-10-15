@@ -1,7 +1,7 @@
 
 CC=gcc
 CFLAGS=-Wall -Wextra
-SRC=src/main.c src/util.c
+SRC=src/main.c src/util.c src/compiler.c
 OUT_DIR=build/cbf
 
 main:

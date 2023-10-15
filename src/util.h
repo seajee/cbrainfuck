@@ -12,4 +12,6 @@ typedef struct
 FileReader file_reader_read(const char* file_path);
 void file_reader_free(FileReader fr);
 
+char* concat(size_t count, ...);
+
 #endif // _UTIL_H_

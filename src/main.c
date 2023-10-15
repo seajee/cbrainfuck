@@ -1,81 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "util.h"
+#include "compiler.h"
+
+#define FILE_OUT "a.out"
+#define FILE_INTERMEDIATE "bf.c"
 
 int main(int argc, char* argv[])
 {
     if (argc <= 1)
     {
         fprintf(stderr, "Usage: cbrainfuck <filename>\n");
-        return 1;
+        return EXIT_FAILURE;
     }
 
-    const char* file_name = argv[1];
-    const char* out_file_name = "bf.c";
-    char* c_compile_cmd = "cc bf.c -o bf.o";
+    const char* src_path = argv[1];
 
-    FileReader program = file_reader_read(file_name);
+    FileReader fr = file_reader_read(src_path);
 
-    if (program.data < 0)
-    {
+    if (fr.data < 0) {
         fprintf(stderr, "ERROR: Could not read file\n");
-        return 1;
+        return EXIT_FAILURE;
     }
 
-    char instruction;
-
-    FILE* out_file = fopen(out_file_name, "w");
-
-    if (out_file == NULL)
-    {
-        fprintf(stderr, "Error: Could not create output file\n");
-        return 1;
+    if (transpile_program_to_file(fr.data, fr.size, FILE_INTERMEDIATE) < 0) {
+        fprintf(stderr, "ERROR: Could not transpile program\n");
     }
 
-    fputs("#include <stdio.h>\nint main()\n{\n    char memory[4096] = { 0 };\n    char* ptr = memory;\n", out_file);
-
-    for (size_t i = 0; i < program.size; ++i)
-    {
-        instruction = program.data[i];
-
-        switch (instruction)
-        {
-            case '>':
-                fputs("    ++ptr;\n", out_file);
-                break;
-            case '<':
-                fputs("    --ptr;\n", out_file);
-                break;
-            case '+':
-                fputs("    ++*ptr;\n", out_file);
-                break;
-            case '-':
-                fputs("    --*ptr;\n", out_file);
-                break;
-            case '.':
-                fputs("    putchar(*ptr);\n", out_file);
-                break;
-            case ',':
-                fputs("    *ptr = getchar();", out_file);
-                break;
-            case '[':
-                fputs("    while (*ptr)\n    {\n", out_file);
-                break;
-            case ']':
-                fputs("    }\n", out_file);
-        }
+    if (compile_program(FILE_INTERMEDIATE, FILE_OUT) < 0) {
+        fprintf(stderr, "ERROR: Could not compile program\n");
     }
 
-    fputs("    return 0;\n}", out_file);
-    fclose(out_file);
-    system(c_compile_cmd);
+    file_reader_free(fr);
 
-    if (remove("bf.c") != 0)
-        printf("Alert: Could not delete translated file \"bf.c\"\n");
-
-    printf("Compiled Successfully\n");
-    
-    return 0;
+    return EXIT_SUCCESS;
 }
