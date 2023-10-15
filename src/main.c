@@ -35,7 +35,11 @@ int main(int argc, char* argv[])
     }
 
     if (args.output_file == NULL) {
-        args.output_file = FILE_OUT;
+        if (args.transpile_only) {
+            args.output_file = FILE_INTERMEDIATE;
+        } else {
+            args.output_file = FILE_OUT;
+        }
     }
 
     // Read source file
@@ -46,16 +50,20 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    // Transpile the program
+    // Transpile the source file without compiling only for set flag
+    if (args.transpile_only) {
+        if (transpile_program_to_file(fr.data, fr.size, args.output_file) < 0) {
+            fprintf(stderr, "ERROR: Could not transpile program\n");
+            return EXIT_FAILURE;
+        }
+        return EXIT_SUCCESS;
+    }
+
     if (transpile_program_to_file(fr.data, fr.size, FILE_INTERMEDIATE) < 0) {
         fprintf(stderr, "ERROR: Could not transpile program\n");
     }
 
-    // Compile if transpile only flag is not present
-    if (args.transpile_only) {
-        return EXIT_SUCCESS;
-    }
-
+    // Compile the transpiled file
     if (compile_program(FILE_INTERMEDIATE, args.output_file) < 0) {
         fprintf(stderr, "ERROR: Could not compile program\n");
         return EXIT_FAILURE;
