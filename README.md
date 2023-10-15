@@ -13,5 +13,11 @@ make
 ## Usage
 
 ```
-Usage: cbrainfuck <filename>
+Usage: cbf -i <input file>
+
+Options:
+  -h         Show this message
+  -i <file>  Input source file
+  -o <file>  Output file
+  -t         Transpile only to output file
 ```
