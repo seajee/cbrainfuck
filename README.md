@@ -1,5 +1,7 @@
 # CBrainfuck
 
+Yet another Brainfuck compiler.
+
 ## Build
 To build the project use the following commands
 
