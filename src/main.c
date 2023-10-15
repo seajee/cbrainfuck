@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
 
     if (compile_program(FILE_INTERMEDIATE, args.output_file) < 0) {
         fprintf(stderr, "ERROR: Could not compile program\n");
+        return EXIT_FAILURE;
     }
 
     file_reader_free(fr);
