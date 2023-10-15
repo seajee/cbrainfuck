@@ -8,7 +8,7 @@
 FileReader file_reader_read(const char* file_path)
 {
     FileReader fr = {
-        .data = (char*)(-1),
+        .data = NULL,
         .size = -1
     };
 
